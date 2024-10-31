@@ -38,16 +38,24 @@ class _FinancialTrackerState extends State<FinancialTracker> {
     super.initState();
     // initilizing the database
     _initilizeDatabase();
-  
-    FinancialTracker.refresh();
+    WidgetsBinding.instance.addPostFrameCallback((_){
+      // if(_userList.length > 1) {
+        _userList.switchUser(_userList.first.id);
+        print("-----after build");
+      // }
+    });
+    //FinancialTracker.refresh();
   }
 
   Future<void> _initilizeDatabase() async {
     // wait for the database to initilize
-    final result = _userList.initDatabase();
+    final result = await _userList.initDatabase();
     if (result == false) {
       print("Unable to load the database");
+      return;
     }
+    
+    print("---------------User before loaidng ${_userList.length}");
     setState(() {
       visibleScreen = HomeScreenLayout(
         usersList: _userList,

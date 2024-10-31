@@ -1,6 +1,7 @@
 import 'package:expences_tracker_with_flutter/datebase_controller.dart';
 import 'package:expences_tracker_with_flutter/financial_entries_list.dart';
 import 'package:expences_tracker_with_flutter/financial_entry.dart';
+import 'package:expences_tracker_with_flutter/financial_tracker.dart';
 import 'package:uuid/uuid.dart';
 // import 'package:sqflite/sqflite.dart';
 // import 'package:path/path.dart';
@@ -21,31 +22,44 @@ class UsersListManager {
     _userList.addAll(
       await databaseController!.getUserList()
     ); 
-      // bool tableCheck = await databaseController!.isTableExist("FinancialEntries");
-      // if (tableCheck) {print("table exits");}
-      // else {print("table don't exits");}
-    _userList.remove(_userList.first);
-    if(_userList.isEmpty) {
-      _userList.add(
-        User(name: "Mohib"),
-      );
-      databaseController!.addUser(_userList.first);
+    
+    ///loading user
+    
+    if(_userList.length == 1) {
+      await databaseController!.addUser(_userList.first);
+      switchUser(_userList.first.id);
+      print("user list was empty-----------");
     }
-    _userList.first.loadFinancialEntries(databaseController!);
+    await _userList.first.loadFinancialEntries(databaseController!);
     selectedUser = _userList.first;
+    
 
-    ///adding customized categories:
+    FinancialTracker.refresh();
+
+    ///Loading customized categories:
     User.incomeCategories.addAll(
       await databaseController!.getCagetoriesWithType(EntryType.income)
     );
     User.expenceCategories.addAll(
       await databaseController!.getCagetoriesWithType(EntryType.expense)
     );
+    print("before wait");
+    refresh();
+    print("after wait");
   }
+
+  Future<void> refresh() async {
+    await Future.delayed(const Duration(seconds: 1));
+    FinancialTracker.refresh();
+    print("waiting");
+  }
+
+  User get first=> _userList.first;
+  int get length=> _userList.length;
 
 
   static final List<User> _userList = [
-    User(name: "Mohib"),
+    User.loadUser(name: "defaut", id: '7336a624-69f6-4d79-834e-458017de2318'),
   ];
   static User selectedUser = _userList.first;
 
@@ -67,8 +81,6 @@ class UsersListManager {
       }
     }
   }
-
-  int get length => _userList.length;
 
   User getUserWithId(String id) {
     for (User user in _userList) {

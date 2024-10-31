@@ -140,6 +140,25 @@ class DatabaseController {
     print("user with id $id deleted from database");
   }
   
+  Future<User> getUser(String id) async {
+    final database_ = await database;
+    List<Map<String, dynamic>> result;
+    try {
+      result = await database_.query(
+        'Users',
+        where: 'id = ?',
+        whereArgs: [id]
+      ); 
+      
+      print("user retrived");
+      return result.map((json) => User.fromMap(json)).toList().first;
+    } catch(exception) {
+      print("error while retriving user list with error: $exception");
+    }
+    return User(name: "Never Saved User");
+  }
+
+
   Future<List<User>> getUserList() async {
     final database_ = await database;
     List<Map<String, dynamic>> resultList;
