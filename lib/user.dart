@@ -23,13 +23,16 @@ class UsersListManager {
       await databaseController!.getUserList()
     ); 
     
-    ///loading user
-    
+    //if no user in database the add user to databse else remove duplicate user.
     if(_userList.length == 1) {
       await databaseController!.addUser(_userList.first);
       switchUser(_userList.first.id);
       print("user list was empty-----------");
+    } else {
+      switchUser(_userList[1].id);
+      _userList.remove(_userList.first);
     }
+
     await _userList.first.loadFinancialEntries(databaseController!);
     selectedUser = _userList.first;
     
@@ -43,16 +46,16 @@ class UsersListManager {
     User.expenceCategories.addAll(
       await databaseController!.getCagetoriesWithType(EntryType.expense)
     );
-    print("before wait");
-    refresh();
-    print("after wait");
+    // print("before wait");
+    // refresh();
+    // print("after wait");
   }
 
-  Future<void> refresh() async {
-    await Future.delayed(const Duration(seconds: 1));
-    FinancialTracker.refresh();
-    print("waiting");
-  }
+  // /Future<void> refresh() async {
+  //   await Future.delayed(const Duration(seconds: 1));
+  //   FinancialTracker.refresh();
+  //   print("waiting");
+  // }
 
   User get first=> _userList.first;
   int get length=> _userList.length;
@@ -93,7 +96,7 @@ class UsersListManager {
   }
 
   Future<void> deleteUserWithId(String id) async {
-    await databaseController?.deleteUser(id);
+    databaseController?.deleteUser(id);
     print("User with id $id deleted");
     if (_userList.length > 1) {
       for (User user in _userList) {
@@ -111,6 +114,7 @@ class UsersListManager {
         }
       }
     }
+
   }
 
 
@@ -130,8 +134,9 @@ class UsersListManager {
         break;
       }
     }
-    databaseController?.updateUser(User.loadUser(name: newName, id: id));
+    await databaseController?.updateUser(User.loadUser(name: newName, id: id));
     print("user updated with name $newName");
+    
   }
 
   void addFinancialEntry(FinancialEntry entry) {
@@ -161,33 +166,33 @@ class User {
   });
 
   FinancialEntriesList financialEntries = FinancialEntriesList(financialEntries: [
-    FinancialEntry(
-      title: "Clothes",
-      amount: 250,
-      type: EntryType.expense,
-      category: "Shopping",
-      date: DateTime(2024, 5, 6, 0, 0, 0, 0, 0),
-      details: "This is an expense for shopping some clothes",
-      userId: '',
-    ),
-    FinancialEntry(
-      title: "Fuel",
-      amount: 400,
-      type: EntryType.expense,
-      category: "Travel",
-      date: DateTime(2024, 4, 5, 0, 0, 0, 0, 0),
-      details: "This is an expense for fuel consumed on travel to city.",
-      userId: '',
-    ),
-    FinancialEntry(
-      title: "Earning",
-      amount: 2000,
-      type: EntryType.income,
-      category: "Business",
-      date: DateTime(2024, 2, 5, 0, 0, 0, 0, 0),
-      details: "This is an income generated from business.",
-      userId: '',
-    ),
+    // FinancialEntry(
+    //   title: "Clothes",
+    //   amount: 250,
+    //   type: EntryType.expense,
+    //   category: "Shopping",
+    //   date: DateTime(2024, 5, 6, 0, 0, 0, 0, 0),
+    //   details: "This is an expense for shopping some clothes",
+    //   userId: '',
+    // ),
+    // FinancialEntry(
+    //   title: "Fuel",
+    //   amount: 400,
+    //   type: EntryType.expense,
+    //   category: "Travel",
+    //   date: DateTime(2024, 4, 5, 0, 0, 0, 0, 0),
+    //   details: "This is an expense for fuel consumed on travel to city.",
+    //   userId: '',
+    // ),
+    // FinancialEntry(
+    //   title: "Earning",
+    //   amount: 2000,
+    //   type: EntryType.income,
+    //   category: "Business",
+    //   date: DateTime(2024, 2, 5, 0, 0, 0, 0, 0),
+    //   details: "This is an income generated from business.",
+    //   userId: '',
+    // ),
   ]);
 
   static List<String> incomeCategories = [

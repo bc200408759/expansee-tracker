@@ -16,11 +16,13 @@ class HomeScreenLayout extends StatefulWidget{
     super.key,
     required this.usersList,
     required this.buildPages,
+    required this.switchUser,
   
   });
   
   final UsersListManager usersList;
   final List<Widget> Function() buildPages;
+  final Function(String id) switchUser;
 
   @override
   State<StatefulWidget> createState() {
@@ -35,6 +37,7 @@ class _HomeScreenLayoutState extends State<HomeScreenLayout> {
     super.initState();
     // initilizing the database
     FinancialTracker.refresh = _refresh;
+    widget.switchUser('7336a624-69f6-4d79-834e-458017de2318');
   }
 
   // Keeps track of selected page
@@ -54,6 +57,7 @@ class _HomeScreenLayoutState extends State<HomeScreenLayout> {
     setState(() {
       _selectedPageIndex = _selectedPageIndex;
     });
+    print("UI refreshed-------------");
   }
   
 

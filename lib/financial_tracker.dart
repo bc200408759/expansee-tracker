@@ -60,6 +60,7 @@ class _FinancialTrackerState extends State<FinancialTracker> {
       visibleScreen = HomeScreenLayout(
         usersList: _userList,
         buildPages: _buildPages,
+        switchUser: _switchUser,
       );
     });
   }
