@@ -57,7 +57,6 @@ class _HomeScreenLayoutState extends State<HomeScreenLayout> {
     setState(() {
       _selectedPageIndex = _selectedPageIndex;
     });
-    print("UI refreshed-------------");
   }
   
 
@@ -65,8 +64,6 @@ class _HomeScreenLayoutState extends State<HomeScreenLayout> {
   Widget build(BuildContext context) {
     final List<Widget> pages = widget.buildPages();
     final Widget currentPage = pages[_selectedPageIndex];
-
-    print("Home Screen Layout rebuild");
 
     return Scaffold(
       body: CustomScrollView(

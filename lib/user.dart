@@ -10,56 +10,40 @@ class UsersListManager {
   UsersListManager();
 
   DatabaseController? databaseController;
-  
+
   Future<bool> initDatabase() async {
     databaseController = DatabaseController.controller;
-    if (databaseController == null ) return false;
+    if (databaseController == null) return false;
     loadUsers();
     return true;
   }
 
-  Future<void> loadUsers() async{
-    _userList.addAll(
-      await databaseController!.getUserList()
-    ); 
-    
+  Future<void> loadUsers() async {
+    _userList.addAll(await databaseController!.getUserList());
+
     //if no user in database the add user to databse else remove duplicate user.
-    if(_userList.length == 1) {
+    if (_userList.length == 1) {
       await databaseController!.addUser(_userList.first);
       switchUser(_userList.first.id);
-      print("user list was empty-----------");
     } else {
-      switchUser(_userList[1].id);
       _userList.remove(_userList.first);
+      switchUser(_userList.first.id);
     }
 
     await _userList.first.loadFinancialEntries(databaseController!);
     selectedUser = _userList.first;
-    
 
     FinancialTracker.refresh();
 
     ///Loading customized categories:
     User.incomeCategories.addAll(
-      await databaseController!.getCagetoriesWithType(EntryType.income)
-    );
+        await databaseController!.getCagetoriesWithType(EntryType.income));
     User.expenceCategories.addAll(
-      await databaseController!.getCagetoriesWithType(EntryType.expense)
-    );
-    // print("before wait");
-    // refresh();
-    // print("after wait");
+        await databaseController!.getCagetoriesWithType(EntryType.expense));
   }
 
-  // /Future<void> refresh() async {
-  //   await Future.delayed(const Duration(seconds: 1));
-  //   FinancialTracker.refresh();
-  //   print("waiting");
-  // }
-
-  User get first=> _userList.first;
-  int get length=> _userList.length;
-
+  User get first => _userList.first;
+  int get length => _userList.length;
 
   static final List<User> _userList = [
     User.loadUser(name: "defaut", id: '7336a624-69f6-4d79-834e-458017de2318'),
@@ -75,11 +59,9 @@ class UsersListManager {
   void switchUser(String id) {
     for (User user in _userList) {
       if (user.id == id) {
-        print("Switched to user with id $id");
         selectedUser = user;
-        //if(user.financialEntries.financialEntries.isEmpty) {
-          user.loadFinancialEntries(databaseController!);
-        //}
+        user.loadFinancialEntries(databaseController!);
+
         return;
       }
     }
@@ -97,7 +79,7 @@ class UsersListManager {
 
   Future<void> deleteUserWithId(String id) async {
     databaseController?.deleteUser(id);
-    print("User with id $id deleted");
+
     if (_userList.length > 1) {
       for (User user in _userList) {
         if (user.id == id) {
@@ -114,9 +96,7 @@ class UsersListManager {
         }
       }
     }
-
   }
-
 
   //custom mam fuction
   List<R> map<R>(R Function(User) transform) {
@@ -135,25 +115,22 @@ class UsersListManager {
       }
     }
     await databaseController?.updateUser(User.loadUser(name: newName, id: id));
-    print("user updated with name $newName");
-    
   }
 
-  void addFinancialEntry(FinancialEntry entry) {
+  Future<void> addFinancialEntry(FinancialEntry entry) async {
     for (User user in _userList) {
       if (user.id == selectedUser.id) {
-        user.addFinancialEntry(entry, databaseController!);
-        return;
+        await user.addFinancialEntry(entry, databaseController!);
+        break;
       }
     }
   }
+
 
   void addCategory(EntryType categoryFor, String categoryName) {
     User.addCategory(categoryFor, categoryName, databaseController!);
   }
 }
-
-
 
 class User {
   User({
@@ -165,7 +142,8 @@ class User {
     required this.id,
   });
 
-  FinancialEntriesList financialEntries = FinancialEntriesList(financialEntries: [
+  FinancialEntriesList financialEntries =
+      FinancialEntriesList(financialEntries: [
     // FinancialEntry(
     //   title: "Clothes",
     //   amount: 250,
@@ -224,10 +202,15 @@ class User {
 
   Future<void> loadFinancialEntries(DatabaseController database) async {
     financialEntries.removeAll();
-    financialEntries.financialEntries =  await database.fetchFinancialEntries(id);
+    financialEntries.financialEntries =
+        await database.fetchFinancialEntries(id);
   }
 
-  static void addCategory(EntryType categoryFor, String categoryName, DatabaseController database,) {
+  static void addCategory(
+    EntryType categoryFor,
+    String categoryName,
+    DatabaseController database,
+  ) {
     if (categoryFor == EntryType.income) {
       incomeCategories.add(categoryName);
     } else if (categoryFor == EntryType.expense) {
@@ -264,4 +247,3 @@ class User {
 
   static Uuid idObject = const Uuid();
 }
-

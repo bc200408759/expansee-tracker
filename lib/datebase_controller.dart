@@ -24,10 +24,10 @@ class DatabaseController {
     }
     try {
       _database = await initDatabase();
-      print("Database initilized");
+
       return _database!;
     } catch(exception) {
-      print("Error while opening database");
+
       throw Exception("Initiliation Error $exception");
     }
   }
@@ -43,13 +43,13 @@ class DatabaseController {
         onCreate: _onCreate,
       );
     } catch (exception) {
-      print("Can't initilize database: $exception");
+
       throw Exception("Failed! Reason: $exception");
     }
   }
 
   Future _onCreate(Database database, int version) async {
-    print("creating tables");
+
       try {
       await database.execute('''
         CREATE TABLE Users (
@@ -78,9 +78,9 @@ class DatabaseController {
         )
       ''');
 
-        print("Database Table: 'User' & 'FinancialEntries' created");
+
       } catch (exception) {
-        print("Table creation failed");
+
         throw Exception("Table creation failed: $exception");
       }
   }
@@ -104,9 +104,9 @@ class DatabaseController {
         conflictAlgorithm: ConflictAlgorithm.replace,
       );
     } catch (exception) {
-      print("error while saving the user: $exception");
+      // throw Exception("Error while adding User $exception");
     }
-    print("user ${user.Name} added to database");
+
   }
 
   Future<void> updateUser(User user) async {
@@ -120,10 +120,9 @@ class DatabaseController {
         whereArgs: [user.id],
         conflictAlgorithm: ConflictAlgorithm.replace,
       );
-    } catch (exception) {
-      print("error while updating user: $exception");
-    }
-    print("user ${user.Name} updated to database");
+    } catch (exception) { 
+      //Noting to do
+       }
   }
   
   Future<void> deleteUser(String id) async {
@@ -135,9 +134,7 @@ class DatabaseController {
         whereArgs: [id],
       );
     } catch (exception) {
-      print("error while deleting the user: $exception");
-    }
-    print("user with id $id deleted from database");
+      throw Exception("Error while deleting User $exception");    }
   }
   
   Future<User> getUser(String id) async {
@@ -150,12 +147,11 @@ class DatabaseController {
         whereArgs: [id]
       ); 
       
-      print("user retrived");
       return result.map((json) => User.fromMap(json)).toList().first;
     } catch(exception) {
-      print("error while retriving user list with error: $exception");
+      //Nothing to do
     }
-    return User(name: "Never Saved User");
+    return User.loadUser(name:"", id: "");
   }
 
 
@@ -167,10 +163,9 @@ class DatabaseController {
         'Users',
       ); 
       
-      print("user list retrived");
       return resultList.map((json) => User.fromMap(json)).toList();
     } catch(exception) {
-      print("error while retriving user list with error: $exception");
+      //Nothing to do
     }
     return List.empty();
   }
@@ -184,9 +179,8 @@ class DatabaseController {
         entry.toMap(),
         conflictAlgorithm: ConflictAlgorithm.replace,
       );
-    print("Entry ${entry.title} added to database with user id: ${entry.userId}");
     } catch (exception) {
-      print("error while saving the entry: $exception");
+      //Nothing to do
     }
   }
 
@@ -201,13 +195,11 @@ class DatabaseController {
         whereArgs: [id],
       );
     
-      print("list with userId $id retrived from database");
       return resultList.map((json) => FinancialEntry.fromMap(json)).toList();
       
     } catch (exception) {
-      print("error while fetching the list: $exception");
+      //Nothing to do 
     }
-    
     return List.empty();
   }
 
@@ -223,9 +215,8 @@ class DatabaseController {
         },
         conflictAlgorithm: ConflictAlgorithm.replace,
       );
-      print("user $categoryName  with type ${type.name} added to database");
     } catch (exception) {
-      print("error while add category $categoryName to databse: $exception");
+      //Nothing do to
     }
   }
 
@@ -240,9 +231,9 @@ class DatabaseController {
         whereArgs: [category],
         conflictAlgorithm: ConflictAlgorithm.replace,
       );
-      print("category $newName updated to database");
+
     } catch (exception) {
-      print("error while updating $category: $exception");
+      //Nothing to do
     }
   }
   
@@ -254,9 +245,9 @@ class DatabaseController {
         where: 'categoryName = ?',
         whereArgs: [category],
       );
-      print("Category $category deleted from database");
+
     } catch (exception) {
-      print("error while deleting the category: $exception");
+      //Nothing to do
     }
   }
 
@@ -270,10 +261,9 @@ class DatabaseController {
         whereArgs: [type.name],
       ); 
       
-      print("user list retrived");
       return resultList.map((row) => row['categoryName'] as String).toList();
     } catch(exception) {
-      print("error while retriving user list with error: $exception");
+      //Nothing todo 
     }
     return List.empty();
   }

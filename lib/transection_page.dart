@@ -151,6 +151,11 @@ class _AddFinancialEntryState extends State<AddFinancialEntry> {
     setState(() {
       inputCategory = inputValue ?? "Unknown";
     });
+    if (inputCategory == "Unknown"){
+      addButtonDisabled = true;
+    } else {
+      addButtonDisabled = false;
+    }
   }
 
   ///Open date picker to pick new date
@@ -174,7 +179,7 @@ class _AddFinancialEntryState extends State<AddFinancialEntry> {
 
   ///Saving the new Financial Entry
   void _onAddButtonTapped() {
-    if (addButtonDisabled == false) {
+    if (!addButtonDisabled) {
       widget.onAddFinancialEntry((FinancialEntry(
           title: inputTitle,
           amount: inputAmount,

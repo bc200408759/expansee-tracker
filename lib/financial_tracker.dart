@@ -2,7 +2,6 @@
 
 import 'package:flutter/material.dart';
 
-// import 'package:expences_tracker_with_flutter/datebase_controller.dart';
 import 'package:expences_tracker_with_flutter/splash_screen.dart';
 import 'package:expences_tracker_with_flutter/home_screen_layout.dart';
 import 'package:expences_tracker_with_flutter/transection_page.dart';
@@ -11,8 +10,7 @@ import 'package:expences_tracker_with_flutter/category_page.dart';
 import 'package:expences_tracker_with_flutter/users_page.dart';
 import 'package:expences_tracker_with_flutter/user.dart';
 import 'package:expences_tracker_with_flutter/financial_entry.dart';
-// import 'package:sqflite/sqflite.dart';
-// import 'package:path/path.dart';
+
 
 class FinancialTracker extends StatefulWidget {
   const FinancialTracker({super.key});
@@ -31,32 +29,30 @@ class _FinancialTrackerState extends State<FinancialTracker> {
 
   final UsersListManager _userList = UsersListManager();
 
-  User _user = User(name: "Mohib");
+  //User _user = User(name: "Mohib");
 
   @override
   void initState() {
+
     super.initState();
     // initilizing the database
     _initilizeDatabase();
+
     WidgetsBinding.instance.addPostFrameCallback((_){
-      // if(_userList.length > 1) {
-        _userList.switchUser(_userList.first.id);
-        print("-----after build");
-      // }
+        _switchUser(_userList.first.id);
     });
-    //FinancialTracker.refresh();
   }
 
   Future<void> _initilizeDatabase() async {
     // wait for the database to initilize
+
     final result = await _userList.initDatabase();
     if (result == false) {
-      print("Unable to load the database");
+
+
       return;
     }
-    
-    print("---------------User before loaidng ${_userList.length}");
-    setState(() {
+        setState(() {
       visibleScreen = HomeScreenLayout(
         usersList: _userList,
         buildPages: _buildPages,
@@ -68,7 +64,7 @@ class _FinancialTrackerState extends State<FinancialTracker> {
   //User related functions start
   void _switchUser(String id) {
     _userList.switchUser(id);
-    _user = UsersListManager.selectedUser;
+    //_user = UsersListManager.selectedUser;
     FinancialTracker.refresh();
   }
 
@@ -96,7 +92,10 @@ class _FinancialTrackerState extends State<FinancialTracker> {
 
   //Add new financial entry
   void _addFinancialEntry(FinancialEntry entry) {
-    _userList.addFinancialEntry(entry);
+    setState(() {
+      _userList.addFinancialEntry(entry);
+    });
+
     FinancialTracker.refresh();
   }
 
@@ -109,12 +108,12 @@ class _FinancialTrackerState extends State<FinancialTracker> {
   List<Widget> _buildPages() {
     return [
       TransectionsPage(
-        financialEntries: _user.financialEntries,
+        financialEntries: UsersListManager.selectedUser.financialEntries,
         onAddFinancialEntry: _addFinancialEntry,
         incomeCategoriesList: User.incomeCategories,
         expenceCategoriesList: User.expenceCategories,
       ),
-      BalancePage(financialEntriesList: _user.financialEntries),
+      BalancePage(financialEntriesList: UsersListManager.selectedUser.financialEntries),
       CategoriesPage(
         onAddCategory: _addCategory,
         incomeCategoriesList: User.incomeCategories,
