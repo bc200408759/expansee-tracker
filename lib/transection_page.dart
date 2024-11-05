@@ -22,7 +22,6 @@ class TransectionsPage extends StatefulWidget {
   final List<String> incomeCategoriesList;
   final List<String> expenceCategoriesList;
 
-
   @override
   State<StatefulWidget> createState() {
     return _TransectionsPageState();
@@ -40,7 +39,7 @@ class _TransectionsPageState extends State<TransectionsPage> {
         return AddFinancialEntry(
           onAddFinancialEntry: widget.onAddFinancialEntry,
           incomeCategoriesList: widget.incomeCategoriesList,
-          expenceCategoriesList: widget.expenceCategoriesList,  
+          expenceCategoriesList: widget.expenceCategoriesList,
         );
       },
     );
@@ -48,30 +47,69 @@ class _TransectionsPageState extends State<TransectionsPage> {
 
   @override
   Widget build(BuildContext context) {
-    cards = widget.financialEntries.map((financialEntry) {
+    // Create a list of transaction cards from financial entries
+    List<Widget> cards = widget.financialEntries.map((financialEntry) {
       return FinancialEntryCard(currentExpence: financialEntry);
     }).toList();
 
-    
-    return Column(
-      children: [
-        Row(
-            mainAxisAlignment: MainAxisAlignment.end,
-            children: [
-              IconButton(
-                onPressed: _addButtonTapped,
-                icon: const Icon(Icons.add),
-              ),
-            ],
+    Widget emptyScreenPrompt = const Center(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Icon(
+            Icons.add_circle_outline,
+            size: 40,
+            color: Colors.purpleAccent
           ),
-        Column(
-          children: cards,
-        )
-      ],
+          SizedBox(height: 16),
+          Text(
+            "No transection added yet!",
+            style: TextStyle(
+              fontSize: 20,
+              color: Colors.purpleAccent,
+            ),
+            textAlign: TextAlign.center,
+          ),
+          SizedBox(height: 6,),
+          Text("Tab the + button to add your first transection.",
+            style: TextStyle(
+              fontSize: 18,
+              color: Colors.purpleAccent,
+            ),
+            textAlign: TextAlign.center,
+          ),
+        ],
+      )
+    );
+
+    return Scaffold(
+      body: Padding(
+        padding: const EdgeInsets.all(4.0),
+        child: Column(
+          children: [
+            Expanded(
+              child: cards.isEmpty
+                  ? emptyScreenPrompt
+                  : ListView(
+                      children: cards,
+                    ),
+            ),
+          ],
+        ),
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: _addButtonTapped,
+        backgroundColor: const Color.fromARGB(
+            255, 232, 159, 243), // Vibrant color for visibility
+        child: const Icon(
+          Icons.add,
+          size: 42,
+          color: Colors.white,
+        ), // New icon and larger size
+      ),
     );
   }
 }
-
 
 class AddFinancialEntry extends StatefulWidget {
   const AddFinancialEntry({
@@ -84,7 +122,6 @@ class AddFinancialEntry extends StatefulWidget {
   final void Function(FinancialEntry entry) onAddFinancialEntry;
   final List<String> incomeCategoriesList;
   final List<String> expenceCategoriesList;
-
 
   @override
   State<StatefulWidget> createState() {
@@ -151,7 +188,7 @@ class _AddFinancialEntryState extends State<AddFinancialEntry> {
     setState(() {
       inputCategory = inputValue ?? "Unknown";
     });
-    if (inputCategory == "Unknown"){
+    if (inputCategory == "Unknown") {
       addButtonDisabled = true;
     } else {
       addButtonDisabled = false;
@@ -181,15 +218,14 @@ class _AddFinancialEntryState extends State<AddFinancialEntry> {
   void _onAddButtonTapped() {
     if (!addButtonDisabled) {
       widget.onAddFinancialEntry((FinancialEntry(
-          title: inputTitle,
-          amount: inputAmount,
-          type: inputType,
-          category: inputCategory ?? "",
-          date: inputDate,
-          details: inputDetails,
-          userId: UsersListManager.selectedUser.id,
-        )
-      ));
+        title: inputTitle,
+        amount: inputAmount,
+        type: inputType,
+        category: inputCategory ?? "",
+        date: inputDate,
+        details: inputDetails,
+        userId: UsersListManager.selectedUser.id,
+      )));
       Navigator.pop(context);
     }
   }
@@ -197,56 +233,70 @@ class _AddFinancialEntryState extends State<AddFinancialEntry> {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.fromLTRB(12, 32, 12, 0),
+      padding: const EdgeInsets.fromLTRB(16, 72, 16, 16),
       child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
+          // Title Field
           TextField(
             onChanged: _titleChanged,
             maxLength: 40,
-            decoration: const InputDecoration(label: Text("Title")),
-          ),
-          Text(
-            titleValidator == ValidationOptions.valid
-                ? ""
-                : titleValidator == ValidationOptions.empty
-                    ? "Title can't be empty"
-                    : titleValidator == ValidationOptions.invalied
-                        ? "Invalid title"
-                        : "",
-            style: const TextStyle(
-              color: Colors.red,
-              fontSize: 10,
+            decoration: InputDecoration(
+              labelText: "Title",
+              border: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(8.0),
+              ),
             ),
           ),
+          const SizedBox(height: 8), // Space between elements
+          // Title Validator Message
+          if (titleValidator != ValidationOptions.valid)
+            Text(
+              titleValidator == ValidationOptions.empty
+                  ? "Title can't be empty"
+                  : "Invalid title",
+              style: const TextStyle(color: Colors.red, fontSize: 12),
+            ),
+
+          const SizedBox(height: 16), // Spacing
+
+          // Amount Field
           TextField(
             onChanged: _amountChanged,
             maxLength: 20,
             keyboardType: TextInputType.number,
-            decoration: const InputDecoration(label: Text("Amount")),
-          ),
-          Text(
-            amountValidator == ValidationOptions.valid
-                ? ""
-                : amountValidator == ValidationOptions.empty
-                    ? "Amount can't be empty"
-                    : amountValidator == ValidationOptions.invalied
-                        ? "Invalid amount"
-                        : "",
-            style: const TextStyle(
-              color: Colors.red,
-              fontSize: 10,
+            decoration: InputDecoration(
+              labelText: "Amount",
+              border: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(8.0),
+              ),
             ),
           ),
+          const SizedBox(height: 8),
+          // Amount Validator Message
+          if (amountValidator != ValidationOptions.valid)
+            Text(
+              amountValidator == ValidationOptions.empty
+                  ? "Amount can't be empty"
+                  : "Invalid amount",
+              style: const TextStyle(color: Colors.red, fontSize: 12),
+            ),
+
+          const SizedBox(height: 16), // Spacing
+
+          // Dropdowns for Entry Type and Category
           Row(
             children: [
               Expanded(
-                flex: 3,
-                child: DropdownButton(
+                child: DropdownButtonFormField<EntryType>(
                   value: inputType,
-                  hint: const Text("Select Type"),
-                  icon: const Icon(Icons.arrow_downward),
-                  items: EntryType.values
-                      .map<DropdownMenuItem<EntryType>>((EntryType entry) {
+                  decoration: InputDecoration(
+                    labelText: "Select Type",
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(8.0),
+                    ),
+                  ),
+                  items: EntryType.values.map((EntryType entry) {
                     return DropdownMenuItem<EntryType>(
                       value: entry,
                       child: Text(entry.name),
@@ -255,17 +305,20 @@ class _AddFinancialEntryState extends State<AddFinancialEntry> {
                   onChanged: _entryTypeChanged,
                 ),
               ),
+              const SizedBox(width: 16), // Space between dropdowns
               Expanded(
-                flex: 3,
-                child: DropdownButton(
+                child: DropdownButtonFormField<String>(
                   value: inputCategory,
-                  hint: const Text("Select Category"),
-                  icon: const Icon(Icons.arrow_downward),
-                  items: categoryList
-                      .map<DropdownMenuItem<String>>((String entry) {
+                  decoration: InputDecoration(
+                    labelText: "Select Category",
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(8.0),
+                    ),
+                  ),
+                  items: categoryList.map((String entry) {
                     return DropdownMenuItem<String>(
                       value: entry,
-                      child: Text(entry.toString()),
+                      child: Text(entry),
                     );
                   }).toList(),
                   onChanged: _entryCategoryChanged,
@@ -273,36 +326,74 @@ class _AddFinancialEntryState extends State<AddFinancialEntry> {
               ),
             ],
           ),
+
+          const SizedBox(height: 16), // Spacing
+
+          // Date Picker Button
           Row(
             children: [
               Expanded(
-                flex: 3,
-                child: TextButton(
-                  child: Text(inputDate.toPrettyDate()),
+                child: OutlinedButton.icon(
+                  icon: const Icon(Icons.calendar_today),
+                  label: Text(inputDate.toPrettyDate()),
                   onPressed: () => _onDatePickerTapped(context),
+                  style: OutlinedButton.styleFrom(
+                    padding: const EdgeInsets.symmetric(vertical: 16),
+                  ),
                 ),
               ),
             ],
           ),
+
+          const SizedBox(height: 16), // Spacing
+
+          // Details Field
           TextField(
             onChanged: _detailsChanged,
             maxLength: 200,
-            decoration: const InputDecoration(label: Text("Detials")),
+            decoration: InputDecoration(
+              labelText: "Details",
+              border: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(8.0),
+              ),
+            ),
+            maxLines: 3,
           ),
+
+          const SizedBox(height: 24), // Spacing
+
+          // Action Buttons
           Row(
             children: [
               Expanded(
-                  flex: 2,
-                  child: TextButton(
-                    child: const Text("Cancel"),
-                    onPressed: () {
-                      Navigator.pop(context);
-                    },
-                  )),
+                child: ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.grey.shade300,
+                    foregroundColor: Colors.black,
+                    padding: const EdgeInsets.symmetric(vertical: 16),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(8.0),
+                    ),
+                  ),
+                  child: const Text("Cancel"),
+                  onPressed: () => Navigator.pop(context),
+                ),
+              ),
+              const SizedBox(width: 16), // Spacing between buttons
               Expanded(
-                child: TextButton(
-                    onPressed: _onAddButtonTapped, child: const Text("Add")),
-              )
+                child: ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.purpleAccent,
+                    foregroundColor: Colors.white,
+                    padding: const EdgeInsets.symmetric(vertical: 16),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(8.0),
+                    ),
+                  ),
+                  onPressed: _onAddButtonTapped,
+                  child: const Text("Add"),
+                ),
+              ),
             ],
           ),
         ],

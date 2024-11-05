@@ -18,64 +18,75 @@ class BalancePage extends StatefulWidget {
 class _BalancePageState extends State<BalancePage> {
   @override
   Widget build(BuildContext context) {
-    return Column(
+    return Container(
+      padding: const EdgeInsets.all(16.0),
+      decoration: BoxDecoration(
+        color: Theme.of(context).brightness == Brightness.light
+            ? Colors.white
+            : Colors.grey[850],
+        borderRadius: BorderRadius.circular(12.0),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.1),
+            blurRadius: 8,
+            offset: const Offset(0, 4),
+          ),
+        ],
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          _buildBalanceRow(
+              "Income",
+              widget.financialEntriesList.totalOfIncome().toString(),
+              Colors.green,
+              Icons.attach_money),
+          const SizedBox(height: 16), // Spacing between rows
+          _buildBalanceRow(
+              "Expense",
+              widget.financialEntriesList.totalOfExpences().toString(),
+              Colors.red,
+              Icons.money_off),
+          const SizedBox(height: 16), // Spacing between rows
+          _buildBalanceRow(
+              "Balance",
+              widget.financialEntriesList.getBalance().toString(),
+              Theme.of(context).brightness == Brightness.light
+                  ? Colors.black
+                  : Colors.white,
+              Icons.account_balance),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildBalanceRow(
+      String label, String amount, Color color, IconData icon) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
         Row(
           children: [
-          const Text(
-            "Income: ",
-            style: TextStyle(
-              color: Colors.green,
-              fontSize: 24,
+            Icon(icon, color: color, size: 30),
+            const SizedBox(width: 8), // Spacing between icon and text
+            Text(
+              "$label: ",
+              style: TextStyle(
+                color: color,
+                fontSize: 24,
+                fontWeight: FontWeight.bold,
+              ),
             ),
+          ],
+        ),
+        Text(
+          amount,
+          style: TextStyle(
+            color: color,
+            fontSize: 24,
+            fontWeight: FontWeight.bold,
           ),
-          Text(
-            "${widget.financialEntriesList.totalOfIncome()}",
-            style: const TextStyle(
-              color: Colors.green,
-              fontSize: 24,
-            ),
-          )
-        ]),
-        Row(
-          children: [
-          const Text(
-            "Expence: ",
-            style: TextStyle(
-              color: Colors.red,
-              fontSize: 24,
-            ),
-          ),
-          Text(
-            "${widget.financialEntriesList.totalOfExpences()}",
-            style: const TextStyle(
-              color: Colors.red,
-              fontSize: 24,
-            ),
-          )
-        ]),
-        Row(
-          children: [
-          Text(
-            "Balance: ",
-            style: TextStyle(
-              color: Theme.of(context).brightness == Brightness.light
-                  ? Colors.black
-                  : Colors.white,
-              fontSize: 24,
-            ),
-          ),
-          Text(
-            "${widget.financialEntriesList.getBalance()}",
-            style: TextStyle(
-              color: Theme.of(context).brightness == Brightness.light
-                  ? Colors.black
-                  : Colors.white,
-
-              fontSize: 24,
-            ),
-          )
-        ])
+        ),
       ],
     );
   }

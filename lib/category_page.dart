@@ -43,7 +43,9 @@ class _CatregoriesPageState extends State<CategoriesPage> {
       context: context,
       isScrollControlled: true,
       builder: (context_) {
-        return AddCategory(onAddCategory: widget.onAddCategory,);
+        return AddCategory(
+          onAddCategory: widget.onAddCategory,
+        );
       },
     );
   }
@@ -53,13 +55,28 @@ class _CatregoriesPageState extends State<CategoriesPage> {
     final List<String> categoriesList = selectedType == EntryType.income
         ? widget.incomeCategoriesList
         : widget.expenceCategoriesList;
+
     categoriesWidgetList.clear();
 
     for (String category in categoriesList) {
       categoriesWidgetList.add(Container(
-        padding: const EdgeInsets.all(8.0),
-        margin: const EdgeInsets.fromLTRB(16, 2, 16, 2),
-        color: const Color.fromARGB(193, 216, 134, 212),
+        padding: const EdgeInsets.all(12.0),
+        margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+        decoration: BoxDecoration(
+        gradient: LinearGradient(
+          colors: [Colors.pink.shade100, Colors.purple.shade100],
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+        ),
+        borderRadius: BorderRadius.circular(15.0),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.1),
+            blurRadius: 5,
+            offset: const Offset(0, 4),
+          ),
+        ],
+      ),
         child: Row(
           children: [
             Text(
@@ -69,44 +86,89 @@ class _CatregoriesPageState extends State<CategoriesPage> {
                 fontWeight: FontWeight.bold,
                 color: Colors.black,
               ),
-            )
+            ),
           ],
         ),
       ));
     }
 
-    return Column(
-      children: [
-        Row(
-            mainAxisAlignment: MainAxisAlignment.end,
+    return Padding(
+      padding: const EdgeInsets.all(16.0),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          // Income and Expense Buttons
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: [
-              IconButton(
-                onPressed: _addButtonTapped,
-                icon: const Icon(Icons.add),
+              ElevatedButton(
+                onPressed: _onIcomeButtonTapped,
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: selectedType == EntryType.income
+                      ? Colors.green
+                      : Colors.grey, // Highlighting selected type
+                  foregroundColor: Colors.white,
+                ),
+                child: const Text(
+                  "Income",
+                  style: TextStyle(fontSize: 20),
+                ),
+              ),
+              ElevatedButton(
+                onPressed: _onExpenceButtonTapped,
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: selectedType == EntryType.expense
+                      ? Colors.red
+                      : Colors.grey, // Highlighting selected type
+                  foregroundColor: Colors.white,
+                ),
+                child: const Text(
+                  "Expense",
+                  style: TextStyle(fontSize: 20),
+                ),
               ),
             ],
-        ),
-        Row(
-          children: [
-            TextButton(
-              onPressed: _onIcomeButtonTapped,
-              child: const Text("Income"),
+          ),
+
+          const SizedBox(
+              height: 16), // Spacing between button row and category list
+
+          // Category List
+          Expanded(
+            child: CustomScrollView(
+              slivers: [
+                SliverList(
+                  delegate: SliverChildBuilderDelegate(
+                    (BuildContext context, int index) {
+                      return categoriesWidgetList.isNotEmpty
+                          ? categoriesWidgetList[index]
+                          : const Center(child: Text('No categories available'));
+                    },
+                    childCount: categoriesWidgetList.length,
+                  ),
+                ),
+              ],
             ),
-            TextButton(
-              onPressed: _onExpenceButtonTapped,
-              child: const Text("Expences"),
+          ),
+
+          // Add Button at the bottom right
+          Align(
+            alignment: Alignment.bottomRight,
+            child: FloatingActionButton(
+              onPressed: _addButtonTapped,
+              backgroundColor: const Color.fromRGBO(232, 159, 243, 1), // Vibrant color for visibility
+              child: const Icon(
+                Icons.add,
+                size: 42,
+                color: Colors.white,
+              ),
             ),
-          ],
-        ),
-        Column(
-          children: categoriesWidgetList,
-        )
-      ],
+          ),
+        ],
+      ),
     );
   }
 }
-
-
 
 class AddCategory extends StatefulWidget {
   const AddCategory({super.key, required this.onAddCategory});
@@ -146,47 +208,119 @@ class _AddCategoryState extends State<AddCategory> {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.fromLTRB(12, 72, 12, 0),
-      child: Column(
-        children: [
-          DropdownButton<EntryType>(
-            value: inputType,
-            hint: const Text("Select Type"),
-            icon: const Icon(Icons.arrow_downward),
-            items: EntryType.values.map<DropdownMenuItem<EntryType>>((EntryType entry) {
-              return DropdownMenuItem<EntryType>(
-                value: entry,
-                child: Text(entry.name),
-              );
-            }).toList(),
-            onChanged: _onEntryTypeChanged,
-          ),
-          TextField(
-            onChanged: _onCategoryNameChanged,
-            maxLength: 20,
-            decoration: const InputDecoration(label: Text("New Category name")),
-          ),
-          Row(
-            children: [
-              Expanded(
-                flex: 2,
-                child: TextButton(
-                  child: const Text("Cancel"),
-                  onPressed: () {
-                    Navigator.pop(context);
-                  },
-                ),
+    return Container(
+      padding: const EdgeInsets.fromLTRB(16.0, 72.0, 16.0, 16.0),
+
+      height: MediaQuery.of(context)
+          .size
+          .height, // Fill the entire height of the screen
+      child: SingleChildScrollView(
+        // Allows for scrolling if the keyboard appears
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            // Header
+            Text(
+              "Add New Category",
+              style: TextStyle(
+                fontSize: 28,
+                fontWeight: FontWeight.bold,
+                color: Theme.of(context).brightness == Brightness.light
+                    ? Colors.black
+                    : Colors.white,
               ),
-              Expanded(
-                child: TextButton(
-                  onPressed: _onAddButtonTapped,
-                  child: const Text("Add"),
-                ),
+            ),
+            const SizedBox(height: 20), // Spacing
+
+            // Dropdown for Entry Type
+            Container(
+              decoration: BoxDecoration(
+                border: Border.all(color: Colors.grey.shade400),
+                borderRadius: BorderRadius.circular(8.0),
               ),
-            ],
-          ),
-        ],
+              child: DropdownButton<EntryType>(
+                value: inputType,
+                hint: const Text("Select Type"),
+                icon: const Icon(Icons.arrow_drop_down),
+                isExpanded: true, // Expands the dropdown to fit the container
+                underline: const SizedBox(), // Remove the underline
+                items: EntryType.values
+                    .map<DropdownMenuItem<EntryType>>((EntryType entry) {
+                  return DropdownMenuItem<EntryType>(
+                    value: entry,
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(
+                          vertical: 12.0, horizontal: 16.0),
+                      child: Text(entry.name),
+                    ),
+                  );
+                }).toList(),
+                onChanged: _onEntryTypeChanged,
+              ),
+            ),
+            const SizedBox(height: 20), // Spacing
+
+            // Text Field for Category Name
+            TextField(
+              onChanged: _onCategoryNameChanged,
+              maxLength: 20,
+              decoration: InputDecoration(
+                labelText: "New Category Name",
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(8.0),
+                  borderSide: BorderSide(color: Colors.grey.shade400),
+                ),
+                focusedBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(8.0),
+                  borderSide: const BorderSide(color: Color.fromRGBO(232, 159, 243, 1)),
+                ),
+                hintText: "Enter category name",
+                filled: true,
+                fillColor: Colors.grey.shade100,
+              ),
+            ),
+            const SizedBox(height: 20), // Spacing
+
+            // Action Buttons
+            Row(
+              children: [
+                Expanded(
+                  flex: 1,
+                  child: ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.grey.shade300,
+                      foregroundColor: Colors.black,
+                      padding: const EdgeInsets.symmetric(vertical: 12.0),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(8.0),
+                      ),
+                    ),
+                    child: const Text("Cancel"),
+                    onPressed: () {
+                      Navigator.pop(context);
+                    },
+                  ),
+                ),
+                const SizedBox(width: 10), // Spacing between buttons
+                Expanded(
+                  flex: 1,
+                  child: ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.purpleAccent,
+                      foregroundColor: Colors.white,
+                      padding: const EdgeInsets.symmetric(vertical: 12.0),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(8.0),
+                      ),
+                    ),
+                    onPressed: _onAddButtonTapped,
+                    child: const Text("Add"),
+                  ),
+                ),
+              ],
+            ),
+          ],
+        ),
       ),
     );
   }

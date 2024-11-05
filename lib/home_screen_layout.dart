@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:expences_tracker_with_flutter/user.dart';
 
@@ -9,17 +8,14 @@ import 'package:expences_tracker_with_flutter/user.dart';
 // import 'package:expences_tracker_with_flutter/financial_entry.dart';
 import 'package:expences_tracker_with_flutter/financial_tracker.dart';
 
-
-
-class HomeScreenLayout extends StatefulWidget{
+class HomeScreenLayout extends StatefulWidget {
   const HomeScreenLayout({
     super.key,
     required this.usersList,
     required this.buildPages,
     required this.switchUser,
-  
   });
-  
+
   final UsersListManager usersList;
   final List<Widget> Function() buildPages;
   final Function(String id) switchUser;
@@ -31,7 +27,6 @@ class HomeScreenLayout extends StatefulWidget{
 }
 
 class _HomeScreenLayoutState extends State<HomeScreenLayout> {
-
   @override
   void initState() {
     super.initState();
@@ -43,7 +38,6 @@ class _HomeScreenLayoutState extends State<HomeScreenLayout> {
   // Keeps track of selected page
   int _selectedPageIndex = 0;
 
-
   // This function is executed when any of the page buttons from
   // the AppBar are tapped, changing the tapped page index
   // to the selected one
@@ -52,13 +46,12 @@ class _HomeScreenLayoutState extends State<HomeScreenLayout> {
       _selectedPageIndex = index;
     });
   }
-  
+
   void _refresh() {
     setState(() {
       _selectedPageIndex = _selectedPageIndex;
     });
   }
-  
 
   @override
   Widget build(BuildContext context) {
@@ -69,29 +62,80 @@ class _HomeScreenLayoutState extends State<HomeScreenLayout> {
       body: CustomScrollView(
         slivers: [
           SliverAppBar(
-            title: const Text("Expence Tracker"),
+            title: const Text(
+              "Expense Tracker",
+              style: TextStyle(
+                fontSize: 32,
+                fontWeight: FontWeight.bold,
+                color: Colors.white,
+              ),
+            ),
             floating: true,
-            expandedHeight: 102,
-            actions: [
-              IconButton(
-                icon: const Icon(Icons.tag_faces_sharp),
-                onPressed: () => _onPageButtonTapped(0),
+            expandedHeight: 72,
+            backgroundColor: Colors.deepPurple,
+            flexibleSpace: FlexibleSpaceBar(
+              background: Container(
+                decoration: const BoxDecoration(
+                  gradient: LinearGradient(
+                    colors: [Colors.purpleAccent, Colors.purpleAccent],
+                    begin: Alignment.topLeft,
+                    end: Alignment.bottomRight,
+                  ),
+                ),
               ),
-              IconButton(
-                icon: const Icon(Icons.list_outlined),
-                onPressed: () => _onPageButtonTapped(1),
-              ),
-              IconButton(
-                icon: const Icon(Icons.category_outlined),
-                onPressed: () => _onPageButtonTapped(2),
-              ),
-              IconButton(
-                icon: const Icon(Icons.people_outline),
-                onPressed: () => _onPageButtonTapped(3),
-              ),
-            ],
+            ),
           ),
-          SliverToBoxAdapter(child: currentPage),
+          SliverFillRemaining(
+            hasScrollBody: true,
+            child: AnimatedSwitcher(
+              duration: const Duration(milliseconds: 300),
+              transitionBuilder: (Widget child, Animation<double> animation) {
+                return FadeTransition(opacity: animation, child: child);
+              },
+              child: currentPage,
+            ),
+          ),
+        ],
+      ),
+      bottomNavigationBar: BottomNavigationBar(
+        type: BottomNavigationBarType.fixed,
+        currentIndex: _selectedPageIndex,
+        onTap: _onPageButtonTapped,
+        selectedItemColor: Colors.purpleAccent,
+        unselectedItemColor: Colors.grey,
+        selectedIconTheme: const IconThemeData(
+          color: Colors.purpleAccent, // Selected icon color
+          size: 30, // Selected icon size
+        ),
+        unselectedIconTheme: const IconThemeData(
+          color: Colors.grey, // Unselected icon color
+          size: 24, // Unselected icon size
+        ),
+        selectedLabelStyle: const TextStyle(
+          color: Colors.purpleAccent,
+          fontWeight: FontWeight.bold
+        ),
+        unselectedLabelStyle: const TextStyle(
+          color: Colors.grey,
+          fontWeight: FontWeight.normal
+        ),
+        items: const [
+          BottomNavigationBarItem(
+            icon: Icon(Icons.home_rounded),
+            label: "Home",
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.swap_horiz_rounded),
+            label: "Transactions",
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.category_rounded),
+            label: "Categories",
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.person_rounded),
+            label: "Users",
+          ),
         ],
       ),
     );

@@ -64,7 +64,6 @@ class _FinancialTrackerState extends State<FinancialTracker> {
   //User related functions start
   void _switchUser(String id) {
     _userList.switchUser(id);
-    //_user = UsersListManager.selectedUser;
     FinancialTracker.refresh();
   }
 

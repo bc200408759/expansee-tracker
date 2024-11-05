@@ -44,7 +44,6 @@ class _UsersPageState extends State<UsersPage> {
 
   @override
   Widget build(BuildContext context) {
-
     userCards = widget.usersList.map((user) {
       return UserCardView(
         user: user,
@@ -55,28 +54,55 @@ class _UsersPageState extends State<UsersPage> {
         onDeleteUser: widget.onDeleteUser,
       );
     }).toList();
-    return Column(
-      children: [
-        Row(
-          mainAxisAlignment: MainAxisAlignment.end,
-          children: [
-            IconButton(
-              onPressed: _addButtonTapped,
-              icon: const Icon(Icons.add),
+
+    return Padding(
+      padding: const EdgeInsets.all(16.0),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const SizedBox(
+              height: 16), // Spacing between button row and category list
+
+          // Category List
+          Expanded(
+            child: CustomScrollView(
+              slivers: [
+                SliverList(
+                  delegate: SliverChildBuilderDelegate(
+                    (BuildContext context, int index) {
+                      return userCards.isNotEmpty
+                          ? userCards[index]
+                          : const Center(
+                              child: Text('No categories available'));
+                    },
+                    childCount: userCards.length,
+                  ),
+                ),
+              ],
             ),
-          ],
-        ),
-        Column(
-          children: userCards,
-        )
-      ],
+          ),
+
+          // Add Button at the bottom right
+          Align(
+            alignment: Alignment.bottomRight,
+            child: FloatingActionButton(
+              onPressed: _addButtonTapped,
+              backgroundColor: const Color.fromARGB(
+                  255, 232, 159, 243), // Vibrant color for visibility
+              child: const Icon(
+                Icons.add,
+                size: 42,
+                color: Colors.white,
+              ),
+            ),
+          ),
+        ],
+      ),
     );
   }
 }
 
-
 //Overlay bottom sheet to add user
-
 
 class AddUser extends StatefulWidget {
   const AddUser({
@@ -123,43 +149,68 @@ class _AddUserState extends State<AddUser> {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.fromLTRB(12, 72, 12, 0),
+      padding: const EdgeInsets.fromLTRB(16, 72, 16, 16),
       child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
+          // Name Field
           TextField(
             onChanged: _onNameChanged,
             maxLength: 40,
-            decoration: const InputDecoration(label: Text("Name")),
-          ),
-          Text(
-            nameValidator == ValidationOptions.valid
-                ? ""
-                : nameValidator == ValidationOptions.empty
-                    ? "Name can't be empty"
-                    : nameValidator == ValidationOptions.invalied
-                        ? "Invalid name"
-                        : "",
-            style: const TextStyle(
-              color: Colors.red,
-              fontSize: 10,
+            decoration: InputDecoration(
+              labelText: "Name",
+              border: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(8.0),
+              ),
             ),
           ),
+          const SizedBox(height: 8), // Space between elements
+
+          // Name Validator Message
+          if (nameValidator != ValidationOptions.valid)
+            Text(
+              nameValidator == ValidationOptions.empty
+                  ? "Name can't be empty"
+                  : "Invalid name",
+              style: const TextStyle(color: Colors.red, fontSize: 12),
+            ),
+
+          const SizedBox(height: 24), // Spacing
+
+          // Action Buttons
           Row(
             children: [
               Expanded(
-                  flex: 2,
-                  child: TextButton(
-                    child: const Text("Cancel"),
-                    onPressed: () {
-                      Navigator.pop(context);
-                    },
-                  )),
+                child: ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.grey.shade300,
+                    foregroundColor: Colors.black,
+                    padding: const EdgeInsets.symmetric(vertical: 16),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(8.0),
+                    ),
+                  ),
+                  onPressed: () {
+                    Navigator.pop(context);
+                  },
+                  child: const Text("Cancel"),
+                ),
+              ),
+              const SizedBox(width: 16), // Spacing between buttons
               Expanded(
-                child: TextButton(
+                child: ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.purpleAccent,
+                    foregroundColor: Colors.white,
+                    padding: const EdgeInsets.symmetric(vertical: 16),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(8.0),
+                    ),
+                  ),
                   onPressed: _onAddButtonTapped,
                   child: const Text("Done"),
                 ),
-              )
+              ),
             ],
           ),
         ],
@@ -174,8 +225,6 @@ enum ValidationOptions {
   empty,
   negative,
 }
-
-
 
 /// Edit user overlay
 
@@ -226,43 +275,68 @@ class _EditUserState extends State<EditUser> {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.fromLTRB(12, 72, 12, 0),
+      padding: const EdgeInsets.fromLTRB(16, 72, 16, 16),
       child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
+          // Name Field
           TextField(
             onChanged: _onNameChanged,
             maxLength: 40,
-            decoration: const InputDecoration(label: Text("Name")),
-          ),
-          Text(
-            nameValidator == ValidationOptions.valid
-                ? ""
-                : nameValidator == ValidationOptions.empty
-                    ? "Name can't be empty"
-                    : nameValidator == ValidationOptions.invalied
-                        ? "Invalid name"
-                        : "",
-            style: const TextStyle(
-              color: Colors.red,
-              fontSize: 10,
+            decoration: InputDecoration(
+              labelText: "Name",
+              border: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(8.0),
+              ),
             ),
           ),
+          const SizedBox(height: 8), // Space between elements
+
+          // Name Validator Message
+          if (nameValidator != ValidationOptions.valid)
+            Text(
+              nameValidator == ValidationOptions.empty
+                  ? "Name can't be empty"
+                  : "Invalid name",
+              style: const TextStyle(color: Colors.red, fontSize: 12),
+            ),
+
+          const SizedBox(height: 24), // Spacing
+
+          // Action Buttons
           Row(
             children: [
               Expanded(
-                  flex: 2,
-                  child: TextButton(
-                    child: const Text("Cancel"),
-                    onPressed: () {
-                      Navigator.pop(context);
-                    },
-                  )),
+                child: ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.grey.shade300,
+                    foregroundColor: Colors.black,
+                    padding: const EdgeInsets.symmetric(vertical: 16),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(8.0),
+                    ),
+                  ),
+                  onPressed: () {
+                    Navigator.pop(context);
+                  },
+                  child: const Text("Cancel"),
+                ),
+              ),
+              const SizedBox(width: 16), // Spacing between buttons
               Expanded(
-                child: TextButton(
+                child: ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.purpleAccent,
+                    foregroundColor: Colors.white,
+                    padding: const EdgeInsets.symmetric(vertical: 16),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(8.0),
+                    ),
+                  ),
                   onPressed: _onDoneButtonTapped,
                   child: const Text("Done"),
                 ),
-              )
+              ),
             ],
           ),
         ],
@@ -270,4 +344,3 @@ class _EditUserState extends State<EditUser> {
     );
   }
 }
-
