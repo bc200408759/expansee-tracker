@@ -122,11 +122,11 @@ class _HomeScreenLayoutState extends State<HomeScreenLayout> {
         items: const [
           BottomNavigationBarItem(
             icon: Icon(Icons.home_rounded),
-            label: "Home",
+            label: "Transactions",
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.swap_horiz_rounded),
-            label: "Transactions",
+            label: "Balance",
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.category_rounded),

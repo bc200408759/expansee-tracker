@@ -10,13 +10,14 @@ import 'package:expences_tracker_with_flutter/financial_entry_card.dart';
 class TransectionsPage extends StatefulWidget {
   const TransectionsPage({
     super.key,
+    required this.user,
     required this.financialEntries,
     required this.onAddFinancialEntry,
     required this.incomeCategoriesList,
     required this.expenceCategoriesList,
   });
 
-  //List if expences
+  final User user;
   final FinancialEntriesList financialEntries;
   final void Function(FinancialEntry entry) onAddFinancialEntry;
   final List<String> incomeCategoriesList;
@@ -37,6 +38,7 @@ class _TransectionsPageState extends State<TransectionsPage> {
       isScrollControlled: true,
       builder: (context_) {
         return AddFinancialEntry(
+          userBalance: widget.user.financialEntries.totalOfIncome(),
           onAddFinancialEntry: widget.onAddFinancialEntry,
           incomeCategoriesList: widget.incomeCategoriesList,
           expenceCategoriesList: widget.expenceCategoriesList,
@@ -45,42 +47,52 @@ class _TransectionsPageState extends State<TransectionsPage> {
     );
   }
 
+  void _showTransectionDetails(FinancialEntry currentEntry) {
+    showModalBottomSheet(
+      context: context,
+      builder: (context_) {
+        return TransactionDetailView(currentEntry: currentEntry);
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     // Create a list of transaction cards from financial entries
     List<Widget> cards = widget.financialEntries.map((financialEntry) {
-      return FinancialEntryCard(currentExpence: financialEntry);
+      return FinancialEntryCard(
+        currentExpence: financialEntry,
+        showTransactionDetials: _showTransectionDetails,
+      );
     }).toList();
 
     Widget emptyScreenPrompt = const Center(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Icon(
-            Icons.add_circle_outline,
-            size: 40,
-            color: Colors.purpleAccent
+        child: Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Icon(Icons.add_circle_outline, size: 40, color: Colors.purpleAccent),
+        SizedBox(height: 16),
+        Text(
+          "No transection added yet!",
+          style: TextStyle(
+            fontSize: 20,
+            color: Colors.purpleAccent,
           ),
-          SizedBox(height: 16),
-          Text(
-            "No transection added yet!",
-            style: TextStyle(
-              fontSize: 20,
-              color: Colors.purpleAccent,
-            ),
-            textAlign: TextAlign.center,
+          textAlign: TextAlign.center,
+        ),
+        SizedBox(
+          height: 6,
+        ),
+        Text(
+          "Tab the + button to add your first transection.",
+          style: TextStyle(
+            fontSize: 18,
+            color: Colors.purpleAccent,
           ),
-          SizedBox(height: 6,),
-          Text("Tab the + button to add your first transection.",
-            style: TextStyle(
-              fontSize: 18,
-              color: Colors.purpleAccent,
-            ),
-            textAlign: TextAlign.center,
-          ),
-        ],
-      )
-    );
+          textAlign: TextAlign.center,
+        ),
+      ],
+    ));
 
     return Scaffold(
       body: Padding(
@@ -114,11 +126,13 @@ class _TransectionsPageState extends State<TransectionsPage> {
 class AddFinancialEntry extends StatefulWidget {
   const AddFinancialEntry({
     super.key,
+    required this.userBalance,
     required this.onAddFinancialEntry,
     required this.incomeCategoriesList,
     required this.expenceCategoriesList,
   });
 
+  final double userBalance;
   final void Function(FinancialEntry entry) onAddFinancialEntry;
   final List<String> incomeCategoriesList;
   final List<String> expenceCategoriesList;
@@ -134,6 +148,7 @@ class _AddFinancialEntryState extends State<AddFinancialEntry> {
   ValidationOptions titleValidator = ValidationOptions.valid;
   ValidationOptions amountValidator = ValidationOptions.valid;
   ValidationOptions detailsValidator = ValidationOptions.valid;
+  String amountValidatationText = "";
   bool addButtonDisabled = false;
 
   String inputTitle = '';
@@ -163,7 +178,11 @@ class _AddFinancialEntryState extends State<AddFinancialEntry> {
       } else {
         try {
           inputAmount = double.parse(inputValue);
-          amountValidator = ValidationOptions.valid;
+          if (inputAmount > widget.userBalance) {
+            amountValidator = ValidationOptions.notEnoughMoney;
+          } else {
+            amountValidator = ValidationOptions.valid;
+          }
         } catch (exception) {
           amountValidator = ValidationOptions.invalied;
         }
@@ -216,7 +235,7 @@ class _AddFinancialEntryState extends State<AddFinancialEntry> {
 
   ///Saving the new Financial Entry
   void _onAddButtonTapped() {
-    if (!addButtonDisabled) {
+    if (!addButtonDisabled && amountValidatationText == "") {
       widget.onAddFinancialEntry((FinancialEntry(
         title: inputTitle,
         amount: inputAmount,
@@ -232,6 +251,18 @@ class _AddFinancialEntryState extends State<AddFinancialEntry> {
 
   @override
   Widget build(BuildContext context) {
+    if (amountValidator == ValidationOptions.empty) {
+      amountValidatationText = "Amount can't be empty";
+    } else if (amountValidator == ValidationOptions.notEnoughMoney &&
+        inputType == EntryType.expense) {
+      amountValidatationText =
+          "Can't make transection! Amount more than your balance";
+    } else if (amountValidator == ValidationOptions.invalied) {
+      amountValidatationText = "Invalid value! Amount Can only be in numbers";
+    } else {
+      amountValidatationText = "";
+    }
+
     return Padding(
       padding: const EdgeInsets.fromLTRB(16, 72, 16, 16),
       child: Column(
@@ -242,7 +273,7 @@ class _AddFinancialEntryState extends State<AddFinancialEntry> {
             onChanged: _titleChanged,
             maxLength: 40,
             decoration: InputDecoration(
-              labelText: "Title",
+              labelText: "Title for transaction",
               border: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(8.0),
               ),
@@ -276,9 +307,7 @@ class _AddFinancialEntryState extends State<AddFinancialEntry> {
           // Amount Validator Message
           if (amountValidator != ValidationOptions.valid)
             Text(
-              amountValidator == ValidationOptions.empty
-                  ? "Amount can't be empty"
-                  : "Invalid amount",
+              amountValidatationText,
               style: const TextStyle(color: Colors.red, fontSize: 12),
             ),
 
@@ -352,7 +381,7 @@ class _AddFinancialEntryState extends State<AddFinancialEntry> {
             onChanged: _detailsChanged,
             maxLength: 200,
             decoration: InputDecoration(
-              labelText: "Details",
+              labelText: "Some detials of Transaction",
               border: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(8.0),
               ),
@@ -407,6 +436,7 @@ enum ValidationOptions {
   invalied,
   empty,
   negative,
+  notEnoughMoney,
 }
 
 // extension ToPrettyDateString on DateTime {
@@ -420,3 +450,112 @@ enum ValidationOptions {
 //     return "${fromMonths[month - 1]} $day, $year";
 //   }
 // }
+
+class TransactionDetailView extends StatelessWidget {
+  TransactionDetailView({
+    required this.currentEntry,
+  });
+
+  final FinancialEntry currentEntry;
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(18, 24, 18, 48),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Center(
+            child: Container(
+              width: 50,
+              height: 5,
+              decoration: BoxDecoration(
+                color: Colors.grey[300],
+                borderRadius: BorderRadius.circular(2.5),
+              ),
+            ),
+          ),
+          SizedBox(height: 20),
+          Text(
+            currentEntry.title,
+            style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+          ),
+          SizedBox(height: 8),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(
+                'Amount:',
+                style: TextStyle(fontSize: 18),
+              ),
+              Text(
+                '\$${currentEntry.amount.toStringAsFixed(2)}',
+                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+              ),
+            ],
+          ),
+          SizedBox(height: 8),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(
+                'Type:',
+                style: TextStyle(fontSize: 18),
+              ),
+              Text(
+                currentEntry.type.name,
+                style: TextStyle(
+                  fontSize: 18,
+                  color: currentEntry.type == EntryType.income
+                      ? Colors.green
+                      : Colors.red,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ],
+          ),
+          SizedBox(height: 8),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(
+                'Category:',
+                style: TextStyle(fontSize: 18),
+              ),
+              Text(
+                currentEntry.category,
+                style: TextStyle(fontSize: 18),
+              ),
+            ],
+          ),
+          SizedBox(height: 8),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(
+                'Date:',
+                style: TextStyle(fontSize: 18),
+              ),
+              Text(
+                currentEntry.date.toPrettyDate(),//'${currentEntry.date.day}/${currentEntry.date.month}/${currentEntry.date.year}',
+                style: TextStyle(fontSize: 18),
+              ),
+            ],
+          ),
+          SizedBox(height: 16),
+          Text(
+            'Details:',
+            style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+          ),
+          SizedBox(height: 4),
+          Text(
+            currentEntry.details,
+            style: TextStyle(fontSize: 16, color: Colors.grey[600]),
+          ),
+          SizedBox(height: 16),
+        ],
+      ),
+    ); //Padding(padding: const  EdgeInsets.all(12),);
+  }
+}

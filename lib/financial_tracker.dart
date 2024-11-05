@@ -107,6 +107,7 @@ class _FinancialTrackerState extends State<FinancialTracker> {
   List<Widget> _buildPages() {
     return [
       TransectionsPage(
+        user: UsersListManager.selectedUser,
         financialEntries: UsersListManager.selectedUser.financialEntries,
         onAddFinancialEntry: _addFinancialEntry,
         incomeCategoriesList: User.incomeCategories,
@@ -134,3 +135,4 @@ class _FinancialTrackerState extends State<FinancialTracker> {
     return visibleScreen;
   }
 }
+

@@ -5,9 +5,18 @@ import 'package:flutter/material.dart';
 import 'package:expences_tracker_with_flutter/financial_entry.dart';
 
 class FinancialEntryCard extends StatelessWidget {
-  const FinancialEntryCard({super.key, required this.currentExpence});
+  const FinancialEntryCard({
+    super.key,
+    required this.currentExpence,
+    required this.showTransactionDetials,
+  });
 
   final FinancialEntry currentExpence;
+  final Function(FinancialEntry) showTransactionDetials;
+
+  void showDetials() {
+    showTransactionDetials(currentExpence);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -73,12 +82,19 @@ class FinancialEntryCard extends StatelessWidget {
                     ),
                   ],
                 ),
-                const SizedBox(height: 8),
+                //const SizedBox(height: 8),
 
                 // Amount aligned to the right
                 Row(
-                  mainAxisAlignment: MainAxisAlignment.end,
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
+                    IconButton(
+                      onPressed: showDetials,
+                      icon: Icon(
+                        Icons.info,
+                        color: Colors.blue,
+                      ),
+                    ),
                     Text(
                       "\$${currentExpence.amount.toStringAsFixed(2)}",
                       style: TextStyle(
