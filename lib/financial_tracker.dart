@@ -12,6 +12,8 @@ import 'package:expences_tracker_with_flutter/user.dart';
 import 'package:expences_tracker_with_flutter/financial_entry.dart';
 
 
+Color themeColor = Colors.green;
+
 class FinancialTracker extends StatefulWidget {
   const FinancialTracker({super.key});
 
@@ -25,7 +27,7 @@ class FinancialTracker extends StatefulWidget {
 
 class _FinancialTrackerState extends State<FinancialTracker> {
   //visible screen for user
-  Widget visibleScreen = const SplashScreen();
+  Widget visibleScreen = SplashScreen(themeColor: themeColor,);
 
   final UsersListManager _userList = UsersListManager();
 
@@ -57,6 +59,7 @@ class _FinancialTrackerState extends State<FinancialTracker> {
         usersList: _userList,
         buildPages: _buildPages,
         switchUser: _switchUser,
+        themeColor: themeColor,
       );
     });
   }
@@ -112,6 +115,7 @@ class _FinancialTrackerState extends State<FinancialTracker> {
         onAddFinancialEntry: _addFinancialEntry,
         incomeCategoriesList: User.incomeCategories,
         expenceCategoriesList: User.expenceCategories,
+        themeColor: themeColor,
       ),
       BalancePage(financialEntriesList: UsersListManager.selectedUser.financialEntries),
       CategoriesPage(
@@ -126,6 +130,7 @@ class _FinancialTrackerState extends State<FinancialTracker> {
         onChangeUserName: _onChangeUserName,
         onSwitchUser: _switchUser,
         onDeleteUser: _deleteUser,
+        themeColor: themeColor,
       )
     ];
   }

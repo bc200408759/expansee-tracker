@@ -1,5 +1,6 @@
 //view class
 
+import 'package:expences_tracker_with_flutter/financial_tracker.dart';
 import 'package:flutter/material.dart';
 
 import 'package:expences_tracker_with_flutter/user.dart';
@@ -15,6 +16,7 @@ class TransectionsPage extends StatefulWidget {
     required this.onAddFinancialEntry,
     required this.incomeCategoriesList,
     required this.expenceCategoriesList,
+    required this.themeColor,
   });
 
   final User user;
@@ -22,6 +24,7 @@ class TransectionsPage extends StatefulWidget {
   final void Function(FinancialEntry entry) onAddFinancialEntry;
   final List<String> incomeCategoriesList;
   final List<String> expenceCategoriesList;
+  final HSLColor themeColor;
 
   @override
   State<StatefulWidget> createState() {
@@ -42,6 +45,7 @@ class _TransectionsPageState extends State<TransectionsPage> {
           onAddFinancialEntry: widget.onAddFinancialEntry,
           incomeCategoriesList: widget.incomeCategoriesList,
           expenceCategoriesList: widget.expenceCategoriesList,
+          themeColor: widget.themeColor,
         );
       },
     );
@@ -51,7 +55,10 @@ class _TransectionsPageState extends State<TransectionsPage> {
     showModalBottomSheet(
       context: context,
       builder: (context_) {
-        return TransactionDetailView(currentEntry: currentEntry);
+        return TransactionDetailView(
+          currentEntry: currentEntry,
+          themeColor: widget.themeColor,
+        );
       },
     );
   }
@@ -63,20 +70,21 @@ class _TransectionsPageState extends State<TransectionsPage> {
       return FinancialEntryCard(
         currentExpence: financialEntry,
         showTransactionDetials: _showTransectionDetails,
+        themeColor: widget.themeColor,
       );
     }).toList();
 
-    Widget emptyScreenPrompt = const Center(
+    Widget emptyScreenPrompt = Center(
         child: Column(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        Icon(Icons.add_circle_outline, size: 40, color: Colors.purpleAccent),
+        Icon(Icons.add_circle_outline, size: 40, color: widget.themeColor.toColor()),
         SizedBox(height: 16),
         Text(
           "No transection added yet!",
           style: TextStyle(
             fontSize: 20,
-            color: Colors.purpleAccent,
+            color: widget.themeColor.toColor(),
           ),
           textAlign: TextAlign.center,
         ),
@@ -87,7 +95,7 @@ class _TransectionsPageState extends State<TransectionsPage> {
           "Tab the + button to add your first transection.",
           style: TextStyle(
             fontSize: 18,
-            color: Colors.purpleAccent,
+            color: widget.themeColor.toColor(),
           ),
           textAlign: TextAlign.center,
         ),
@@ -111,8 +119,7 @@ class _TransectionsPageState extends State<TransectionsPage> {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: _addButtonTapped,
-        backgroundColor: const Color.fromARGB(
-            255, 232, 159, 243), // Vibrant color for visibility
+        backgroundColor: themeColor.adjustedLightness(by: 100), // Vibrant color for visibility
         child: const Icon(
           Icons.add,
           size: 42,
@@ -130,12 +137,14 @@ class AddFinancialEntry extends StatefulWidget {
     required this.onAddFinancialEntry,
     required this.incomeCategoriesList,
     required this.expenceCategoriesList,
+    required this.themeColor,
   });
 
   final double userBalance;
   final void Function(FinancialEntry entry) onAddFinancialEntry;
   final List<String> incomeCategoriesList;
   final List<String> expenceCategoriesList;
+  final HSLColor themeColor;
 
   @override
   State<StatefulWidget> createState() {
@@ -408,11 +417,12 @@ class _AddFinancialEntryState extends State<AddFinancialEntry> {
                   onPressed: () => Navigator.pop(context),
                 ),
               ),
-              const SizedBox(width: 16), // Spacing between buttons
+              const 
+              SizedBox(width: 16), // Spacing between buttons
               Expanded(
                 child: ElevatedButton(
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.purpleAccent,
+                    backgroundColor: widget.themeColor.toColor(),
                     foregroundColor: Colors.white,
                     padding: const EdgeInsets.symmetric(vertical: 16),
                     shape: RoundedRectangleBorder(
@@ -454,9 +464,11 @@ enum ValidationOptions {
 class TransactionDetailView extends StatelessWidget {
   TransactionDetailView({
     required this.currentEntry,
+    required this.themeColor,
   });
 
   final FinancialEntry currentEntry;
+  final HSLColor themeColor;
 
   @override
   Widget build(BuildContext context) {
@@ -538,7 +550,8 @@ class TransactionDetailView extends StatelessWidget {
                 style: TextStyle(fontSize: 18),
               ),
               Text(
-                currentEntry.date.toPrettyDate(),//'${currentEntry.date.day}/${currentEntry.date.month}/${currentEntry.date.year}',
+                currentEntry.date
+                    .toPrettyDate(), //'${currentEntry.date.day}/${currentEntry.date.month}/${currentEntry.date.year}',
                 style: TextStyle(fontSize: 18),
               ),
             ],

@@ -13,6 +13,7 @@ class UsersPage extends StatefulWidget {
     required this.onChangeUserName,
     required this.onSwitchUser,
     required this.onDeleteUser,
+    required this.themeColor,
   });
 
   final UsersListManager usersList;
@@ -21,6 +22,7 @@ class UsersPage extends StatefulWidget {
   final void Function(String id, String name) onChangeUserName;
   final void Function(String id) onSwitchUser;
   final void Function(String id) onDeleteUser;
+  final HSLColor themeColor;
 
   @override
   State<StatefulWidget> createState() {
@@ -37,6 +39,7 @@ class _UsersPageState extends State<UsersPage> {
       builder: (context_) {
         return AddUser(
           onAddUser: widget.onAddUser,
+          themeColor: widget.themeColor,
         );
       },
     );
@@ -52,6 +55,7 @@ class _UsersPageState extends State<UsersPage> {
         callerContext: context,
         onSwitchUser: widget.onSwitchUser,
         onDeleteUser: widget.onDeleteUser,
+        themeColor: widget.themeColor,
       );
     }).toList();
 
@@ -87,8 +91,7 @@ class _UsersPageState extends State<UsersPage> {
             alignment: Alignment.bottomRight,
             child: FloatingActionButton(
               onPressed: _addButtonTapped,
-              backgroundColor: const Color.fromARGB(
-                  255, 232, 159, 243), // Vibrant color for visibility
+              backgroundColor: widget.themeColor.toColor(), // Vibrant color for visibility
               child: const Icon(
                 Icons.add,
                 size: 42,
@@ -108,9 +111,11 @@ class AddUser extends StatefulWidget {
   const AddUser({
     super.key,
     required this.onAddUser,
+    required this.themeColor,
   });
 
   final void Function(String userName) onAddUser;
+  final HSLColor themeColor;
 
   @override
   State<StatefulWidget> createState() {
@@ -200,7 +205,7 @@ class _AddUserState extends State<AddUser> {
               Expanded(
                 child: ElevatedButton(
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.purpleAccent,
+                    backgroundColor: widget.themeColor.toColor(),
                     foregroundColor: Colors.white,
                     padding: const EdgeInsets.symmetric(vertical: 16),
                     shape: RoundedRectangleBorder(
@@ -233,10 +238,12 @@ class EditUser extends StatefulWidget {
     super.key,
     required this.onChangeUserName,
     required this.user,
+    required this.themeColor,
   });
 
   final void Function(String id, String userName) onChangeUserName;
   final User user;
+  final HSLColor themeColor;
 
   @override
   State<StatefulWidget> createState() {
@@ -326,7 +333,7 @@ class _EditUserState extends State<EditUser> {
               Expanded(
                 child: ElevatedButton(
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.purpleAccent,
+                    backgroundColor: widget.themeColor.toColor(),
                     foregroundColor: Colors.white,
                     padding: const EdgeInsets.symmetric(vertical: 16),
                     shape: RoundedRectangleBorder(

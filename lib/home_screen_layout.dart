@@ -14,11 +14,13 @@ class HomeScreenLayout extends StatefulWidget {
     required this.usersList,
     required this.buildPages,
     required this.switchUser,
+    required this.themeColor,s
   });
 
   final UsersListManager usersList;
   final List<Widget> Function() buildPages;
   final Function(String id) switchUser;
+  final HSLColor themeColor;
 
   @override
   State<StatefulWidget> createState() {

@@ -9,10 +9,12 @@ class FinancialEntryCard extends StatelessWidget {
     super.key,
     required this.currentExpence,
     required this.showTransactionDetials,
+    required this.themeColor,
   });
 
   final FinancialEntry currentExpence;
   final Function(FinancialEntry) showTransactionDetials;
+  final HSLColor themeColor;
 
   void showDetials() {
     showTransactionDetials(currentExpence);
