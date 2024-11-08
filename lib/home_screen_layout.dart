@@ -7,7 +7,7 @@ import 'package:expences_tracker_with_flutter/user.dart';
 // import 'package:expences_tracker_with_flutter/users_page.dart';
 // import 'package:expences_tracker_with_flutter/financial_entry.dart';
 import 'package:expences_tracker_with_flutter/financial_tracker.dart';
-
+ 
 class HomeScreenLayout extends StatefulWidget {
   const HomeScreenLayout({
     super.key,
@@ -77,9 +77,9 @@ class _HomeScreenLayoutState extends State<HomeScreenLayout> {
             backgroundColor: Colors.deepPurple,
             flexibleSpace: FlexibleSpaceBar(
               background: Container(
-                decoration: const BoxDecoration(
+                decoration: BoxDecoration(
                   gradient: LinearGradient(
-                    colors: [Colors.purpleAccent, Colors.purpleAccent],
+                    colors: [widget.themeColor.toColor(), widget.themeColor.toColor(),],
                     begin: Alignment.topLeft,
                     end: Alignment.bottomRight,
                   ),
@@ -103,18 +103,18 @@ class _HomeScreenLayoutState extends State<HomeScreenLayout> {
         type: BottomNavigationBarType.fixed,
         currentIndex: _selectedPageIndex,
         onTap: _onPageButtonTapped,
-        selectedItemColor: Colors.purpleAccent,
+        selectedItemColor: widget.themeColor.toColor(),
         unselectedItemColor: Colors.grey,
-        selectedIconTheme: const IconThemeData(
-          color: Colors.purpleAccent, // Selected icon color
+        selectedIconTheme: IconThemeData(
+          color: widget.themeColor.toColor(), // Selected icon color
           size: 30, // Selected icon size
         ),
         unselectedIconTheme: const IconThemeData(
           color: Colors.grey, // Unselected icon color
           size: 24, // Unselected icon size
         ),
-        selectedLabelStyle: const TextStyle(
-          color: Colors.purpleAccent,
+        selectedLabelStyle: TextStyle(
+          color: widget.themeColor.toColor(),
           fontWeight: FontWeight.bold
         ),
         unselectedLabelStyle: const TextStyle(

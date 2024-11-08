@@ -7,7 +7,7 @@ class SplashScreen extends StatefulWidget {
     required this.themeColor,
   });
 
-  final Color themeColor;
+  final HSLColor themeColor;
 
   @override
   State<StatefulWidget> createState() {
@@ -19,7 +19,7 @@ class _SplashScreenState extends State<SplashScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        backgroundColor: widget.themeColor,
+        backgroundColor: widget.themeColor.toColor(),
         body: Center(
           child: CircularProgressIndicator(),
         ));

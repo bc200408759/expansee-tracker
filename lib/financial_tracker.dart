@@ -12,7 +12,7 @@ import 'package:expences_tracker_with_flutter/user.dart';
 import 'package:expences_tracker_with_flutter/financial_entry.dart';
 
 
-Color themeColor = Colors.green;
+HSLColor themeColor = HSLColor.fromColor(Colors.green);
 
 class FinancialTracker extends StatefulWidget {
   const FinancialTracker({super.key});

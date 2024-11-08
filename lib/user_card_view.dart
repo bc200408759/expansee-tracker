@@ -1,4 +1,5 @@
 import 'package:expences_tracker_with_flutter/financial_tracker.dart';
+import 'package:expences_tracker_with_flutter/extensions.dart';
 import 'package:flutter/material.dart';
 import 'package:expences_tracker_with_flutter/user.dart';
 import 'package:expences_tracker_with_flutter/users_page.dart';
@@ -59,7 +60,8 @@ class _UserCardViewState extends State<UserCardView> {
       decoration: BoxDecoration(
         gradient: LinearGradient(
           colors: [
-            themeColor.toColor(),
+            themeColor.adjustLightness(0.70).toColor(),
+            themeColor.adjustLightness(0.55).toColor(),
           ],
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,

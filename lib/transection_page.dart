@@ -7,6 +7,7 @@ import 'package:expences_tracker_with_flutter/user.dart';
 import 'package:expences_tracker_with_flutter/financial_entry.dart';
 import 'package:expences_tracker_with_flutter/financial_entries_list.dart';
 import 'package:expences_tracker_with_flutter/financial_entry_card.dart';
+import 'package:expences_tracker_with_flutter/extensions.dart';
 
 class TransectionsPage extends StatefulWidget {
   const TransectionsPage({
@@ -65,6 +66,7 @@ class _TransectionsPageState extends State<TransectionsPage> {
 
   @override
   Widget build(BuildContext context) {
+
     // Create a list of transaction cards from financial entries
     List<Widget> cards = widget.financialEntries.map((financialEntry) {
       return FinancialEntryCard(
@@ -119,7 +121,7 @@ class _TransectionsPageState extends State<TransectionsPage> {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: _addButtonTapped,
-        backgroundColor: themeColor.adjustedLightness(by: 100), // Vibrant color for visibility
+        backgroundColor: themeColor.adjustLightness(50).toColor(), // Vibrant color for visibility
         child: const Icon(
           Icons.add,
           size: 42,

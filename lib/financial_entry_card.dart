@@ -1,5 +1,6 @@
 //View class
 
+import 'package:expences_tracker_with_flutter/extensions.dart';
 import 'package:flutter/material.dart';
 
 import 'package:expences_tracker_with_flutter/financial_entry.dart';
@@ -27,7 +28,7 @@ class FinancialEntryCard extends StatelessWidget {
       margin: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
       decoration: BoxDecoration(
         gradient: LinearGradient(
-          colors: [Colors.pink.shade100, Colors.purple.shade100],
+          colors: [themeColor.adjustLightness(50).toColor(), themeColor.adjustLightness(50).toColor(), ],
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
         ),
