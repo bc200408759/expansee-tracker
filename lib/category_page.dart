@@ -3,6 +3,7 @@
 import 'package:flutter/material.dart';
 
 import 'package:expences_tracker_with_flutter/financial_entry.dart';
+import 'package:expences_tracker_with_flutter/extensions.dart';
 
 class CategoriesPage extends StatefulWidget {
   const CategoriesPage({
@@ -10,11 +11,14 @@ class CategoriesPage extends StatefulWidget {
     required this.onAddCategory,
     required this.incomeCategoriesList,
     required this.expenceCategoriesList,
+    required this.themeColor,
   });
 
   final void Function(EntryType categoryFor, String categoryName) onAddCategory;
   final List<String> incomeCategoriesList;
   final List<String> expenceCategoriesList;
+  final HSLColor themeColor;
+
   @override
   State<StatefulWidget> createState() {
     return _CatregoriesPageState();
@@ -64,7 +68,7 @@ class _CatregoriesPageState extends State<CategoriesPage> {
         margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
         decoration: BoxDecoration(
         gradient: LinearGradient(
-          colors: [Colors.pink.shade100, Colors.purple.shade100],
+          colors: [widget.themeColor.adjustLightness(80).toColor(), widget.themeColor.adjustLightness(130).toColor(), ],
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
         ),
@@ -156,7 +160,7 @@ class _CatregoriesPageState extends State<CategoriesPage> {
             alignment: Alignment.bottomRight,
             child: FloatingActionButton(
               onPressed: _addButtonTapped,
-              backgroundColor: const Color.fromRGBO(232, 159, 243, 1), // Vibrant color for visibility
+              backgroundColor: widget.themeColor.adjustLightness(40).toColor(), // Vibrant color for visibility
               child: const Icon(
                 Icons.add,
                 size: 42,

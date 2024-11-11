@@ -60,8 +60,8 @@ class _UserCardViewState extends State<UserCardView> {
       decoration: BoxDecoration(
         gradient: LinearGradient(
           colors: [
-            themeColor.adjustLightness(0.70).toColor(),
-            themeColor.adjustLightness(0.55).toColor(),
+            themeColor.adjustLightness(80).toColor(),
+            themeColor.adjustLightness(130).toColor(),
           ],
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
@@ -82,7 +82,7 @@ class _UserCardViewState extends State<UserCardView> {
             onPressed: _onSwitchUserTapped,
             icon: Icon(
               Icons.switch_account,
-              color: widget.isSelected ? widget.themeColor.toColor(): Colors.grey,
+              color: widget.isSelected ? widget.themeColor.adjustLightness(20).toColor(): Colors.white,
             ),
             tooltip: 'Switch User',
           ),

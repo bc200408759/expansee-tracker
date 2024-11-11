@@ -28,7 +28,10 @@ class FinancialEntryCard extends StatelessWidget {
       margin: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
       decoration: BoxDecoration(
         gradient: LinearGradient(
-          colors: [themeColor.adjustLightness(50).toColor(), themeColor.adjustLightness(50).toColor(), ],
+          colors: [
+            themeColor.adjustLightness(80).toColor(),
+            themeColor.adjustLightness(130).toColor(),
+          ],
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
         ),
