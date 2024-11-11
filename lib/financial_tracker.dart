@@ -52,7 +52,7 @@ class _FinancialTrackerState extends State<FinancialTracker> {
     if (result == false) {
       return;
     }
-    Future.delayed(Duration(seconds: 1), () {
+    Future.delayed(Duration(seconds: 3), () {
       setState(() {
         visibleScreen = HomeScreenLayout(
           usersList: _userList,

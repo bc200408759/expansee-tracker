@@ -19,9 +19,23 @@ class _SplashScreenState extends State<SplashScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        backgroundColor: Colors.green,//widget.themeColor.toColor(),
-        body: Center(
-          child: CircularProgressIndicator(),
-        ));
+      backgroundColor: Colors.green, //widget.themeColor.toColor(),
+      body: Center(
+        child: Stack(
+          alignment: Alignment.center,
+          children: [
+            Image.asset(
+              'assets/images/logo_outlined.png',
+              width: 180,
+              height: 120,
+              fit: BoxFit.fill,
+            ),
+            CircularProgressIndicator(
+              valueColor: AlwaysStoppedAnimation(Colors.white),
+            )
+          ],
+        ),
+      ),
+    );
   }
 }

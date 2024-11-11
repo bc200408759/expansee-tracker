@@ -46,6 +46,7 @@ flutter:
   uses-material-design: true
   assets:
     - assets/images/appicon.jpg
+    - assets/images/logo_outlined.png
 
 flutter_launcher_icons:
   android: true
