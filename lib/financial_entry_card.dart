@@ -89,7 +89,7 @@ class FinancialEntryCard extends StatelessWidget {
                     IconButton(
                       onPressed: showDetials,
                       icon: Icon(
-                        Icons.description,
+                        Icons.arrow_drop_down_circle_sharp,
                         color: Colors.blue,
                       ),
                     ),
