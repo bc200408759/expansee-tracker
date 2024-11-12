@@ -67,20 +67,16 @@ class _CatregoriesPageState extends State<CategoriesPage> {
         padding: const EdgeInsets.all(12.0),
         margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
         decoration: BoxDecoration(
-        gradient: LinearGradient(
-          colors: [widget.themeColor.adjustLightness(80).toColor(), widget.themeColor.adjustLightness(130).toColor(), ],
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
+          color: widget.themeColor.adjustLightness(130).toColor(),
+          borderRadius: BorderRadius.circular(15.0),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withOpacity(0.1),
+              blurRadius: 5,
+              offset: const Offset(0, 4),
+            ),
+          ],
         ),
-        borderRadius: BorderRadius.circular(15.0),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.1),
-            blurRadius: 5,
-            offset: const Offset(0, 4),
-          ),
-        ],
-      ),
         child: Row(
           children: [
             Text(
@@ -146,7 +142,8 @@ class _CatregoriesPageState extends State<CategoriesPage> {
                     (BuildContext context, int index) {
                       return categoriesWidgetList.isNotEmpty
                           ? categoriesWidgetList[index]
-                          : const Center(child: Text('No categories available'));
+                          : const Center(
+                              child: Text('No categories available'));
                     },
                     childCount: categoriesWidgetList.length,
                   ),
@@ -160,7 +157,9 @@ class _CatregoriesPageState extends State<CategoriesPage> {
             alignment: Alignment.bottomRight,
             child: FloatingActionButton(
               onPressed: _addButtonTapped,
-              backgroundColor: widget.themeColor.adjustLightness(40).toColor(), // Vibrant color for visibility
+              backgroundColor: widget.themeColor
+                  .adjustLightness(40)
+                  .toColor(), // Vibrant color for visibility
               child: const Icon(
                 Icons.add,
                 size: 42,
@@ -276,7 +275,8 @@ class _AddCategoryState extends State<AddCategory> {
                 ),
                 focusedBorder: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(8.0),
-                  borderSide: const BorderSide(color: Color.fromRGBO(232, 159, 243, 1)),
+                  borderSide:
+                      const BorderSide(color: Color.fromRGBO(232, 159, 243, 1)),
                 ),
                 hintText: "Enter category name",
                 filled: true,

@@ -52,15 +52,13 @@ class _FinancialTrackerState extends State<FinancialTracker> {
     if (result == false) {
       return;
     }
-    Future.delayed(Duration(seconds: 3), () {
-      setState(() {
-        visibleScreen = HomeScreenLayout(
-          usersList: _userList,
-          buildPages: _buildPages,
-          switchUser: _switchUser,
-          themeColor: themeColor,
-        );
-      });
+    setState(() {
+      visibleScreen = HomeScreenLayout(
+        usersList: _userList,
+        buildPages: _buildPages,
+        switchUser: _switchUser,
+        themeColor: themeColor,
+      );
     });
   }
 

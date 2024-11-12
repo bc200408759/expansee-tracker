@@ -1,11 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:expences_tracker_with_flutter/user.dart';
 
-// import 'package:expences_tracker_with_flutter/transection_page.dart';
-// import 'package:expences_tracker_with_flutter/balance_page.dart';
-// import 'package:expences_tracker_with_flutter/category_page.dart';
-// import 'package:expences_tracker_with_flutter/users_page.dart';
-// import 'package:expences_tracker_with_flutter/financial_entry.dart';
+import 'package:expences_tracker_with_flutter/user.dart';
 import 'package:expences_tracker_with_flutter/financial_tracker.dart';
  
 class HomeScreenLayout extends StatefulWidget {

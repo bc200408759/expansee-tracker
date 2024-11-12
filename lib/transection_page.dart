@@ -67,7 +67,7 @@ class _TransectionsPageState extends State<TransectionsPage> {
   @override
   Widget build(BuildContext context) {
 
-    // Create a list of transaction cards from financial entries
+    // Creating a list of transaction cards from financial entries
     List<Widget> cards = widget.financialEntries.map((financialEntry) {
       return FinancialEntryCard(
         currentExpence: financialEntry,

@@ -27,14 +27,7 @@ class FinancialEntryCard extends StatelessWidget {
       padding: const EdgeInsets.symmetric(vertical: 4.0, horizontal: 12.0),
       margin: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
       decoration: BoxDecoration(
-        gradient: LinearGradient(
-          colors: [
-            themeColor.adjustLightness(80).toColor(),
-            themeColor.adjustLightness(130).toColor(),
-          ],
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-        ),
+        color: themeColor.adjustLightness(130).toColor(),
         borderRadius: BorderRadius.circular(15.0),
         boxShadow: [
           BoxShadow(
@@ -88,7 +81,6 @@ class FinancialEntryCard extends StatelessWidget {
                     ),
                   ],
                 ),
-                //const SizedBox(height: 8),
 
                 // Amount aligned to the right
                 Row(
@@ -144,43 +136,3 @@ extension ToPrettyDateString on DateTime {
   }
 }
 
-
-// class ExpenceCart extends StatefulWidget {
-//   const ExpenceCart({super.key, required this.currentExpence});
-
-//   final Expence currentExpence;
-
-//   @override
-//   State<StatefulWidget> createState() {
-//     return _ExpensesCartState();
-//   }
-// }
-
-// class _ExpensesCartState extends State<ExpenceCart> {
-  
-//   _ExpensesCartState() {
-//     category = widget.currentExpence.category.toString();
-//     amount = widget.currentExpence.amount;
-//     title = widget.currentExpence.title;
-//     date = widget.currentExpence.date.toString();
-
-//   }
-     
-//     late String category;
-//     late double amount;
-//     late String title;
-//     late String date;
-
-
-//   @override
-//   Widget build(BuildContext context) {
-    
- 
-//     return Row(
-//       children: [
-//         const Icon(Icons.shopping_bag_rounded),
-//         Text(category),
-//       ],
-//     );
-//   }
-// }

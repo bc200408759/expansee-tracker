@@ -3,8 +3,6 @@ import 'package:expences_tracker_with_flutter/financial_entries_list.dart';
 import 'package:expences_tracker_with_flutter/financial_entry.dart';
 import 'package:expences_tracker_with_flutter/financial_tracker.dart';
 import 'package:uuid/uuid.dart';
-// import 'package:sqflite/sqflite.dart';
-// import 'package:path/path.dart';
 
 class UsersListManager {
   UsersListManager();
@@ -53,7 +51,6 @@ class UsersListManager {
   Future<void> addUser(User user) async {
     _userList.add(user);
     await databaseController?.addUser(user);
-    //print("User added: ${user.Name}");
   }
 
   void switchUser(String id) {
@@ -144,33 +141,7 @@ class User {
 
   FinancialEntriesList financialEntries =
       FinancialEntriesList(financialEntries: [
-    // FinancialEntry(
-    //   title: "Clothes",
-    //   amount: 250,
-    //   type: EntryType.expense,
-    //   category: "Shopping",
-    //   date: DateTime(2024, 5, 6, 0, 0, 0, 0, 0),
-    //   details: "This is an expense for shopping some clothes",
-    //   userId: '',
-    // ),
-    // FinancialEntry(
-    //   title: "Fuel",
-    //   amount: 400,
-    //   type: EntryType.expense,
-    //   category: "Travel",
-    //   date: DateTime(2024, 4, 5, 0, 0, 0, 0, 0),
-    //   details: "This is an expense for fuel consumed on travel to city.",
-    //   userId: '',
-    // ),
-    // FinancialEntry(
-    //   title: "Earning",
-    //   amount: 2000,
-    //   type: EntryType.income,
-    //   category: "Business",
-    //   date: DateTime(2024, 2, 5, 0, 0, 0, 0, 0),
-    //   details: "This is an income generated from business.",
-    //   userId: '',
-    // ),
+   
   ]);
 
   static List<String> incomeCategories = [

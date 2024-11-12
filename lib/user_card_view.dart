@@ -58,14 +58,7 @@ class _UserCardViewState extends State<UserCardView> {
       padding: const EdgeInsets.symmetric(vertical: 12.0, horizontal: 16.0),
       margin: const EdgeInsets.symmetric(horizontal: 12.0, vertical: 8.0),
       decoration: BoxDecoration(
-        gradient: LinearGradient(
-          colors: [
-            themeColor.adjustLightness(80).toColor(),
-            themeColor.adjustLightness(130).toColor(),
-          ],
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-        ),
+        color: themeColor.adjustLightness(130).toColor(),
         borderRadius: BorderRadius.circular(15.0),
         boxShadow: [
           BoxShadow(
@@ -82,11 +75,11 @@ class _UserCardViewState extends State<UserCardView> {
             onPressed: _onSwitchUserTapped,
             icon: Icon(
               Icons.switch_account,
-              color: widget.isSelected ? widget.themeColor.adjustLightness(20).toColor(): Colors.white,
+              color: widget.isSelected ? widget.themeColor.adjustLightness(20).toColor(): widget.themeColor.adjustLightness(80).toColor(),
             ),
             tooltip: 'Switch User',
           ),
-          // User Name with Flexibility for Adjusting Longer Names
+
           Expanded(
             child: FittedBox(
               fit: BoxFit.scaleDown,
@@ -105,6 +98,7 @@ class _UserCardViewState extends State<UserCardView> {
               ),
             ),
           ),
+          
           // Edit Icon Button
           IconButton(
             onPressed: _onEditUserTapped,
