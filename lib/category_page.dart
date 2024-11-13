@@ -49,6 +49,7 @@ class _CatregoriesPageState extends State<CategoriesPage> {
       builder: (context_) {
         return AddCategory(
           onAddCategory: widget.onAddCategory,
+          themeColor: widget.themeColor,
         );
       },
     );
@@ -174,8 +175,13 @@ class _CatregoriesPageState extends State<CategoriesPage> {
 }
 
 class AddCategory extends StatefulWidget {
-  const AddCategory({super.key, required this.onAddCategory});
+  const AddCategory({
+    super.key,
+    required this.onAddCategory,
+    required this.themeColor,
+  s});
 
+  final HSLColor themeColor;
   final void Function(EntryType categoryFor, String categoryName) onAddCategory;
 
   @override
@@ -310,7 +316,7 @@ class _AddCategoryState extends State<AddCategory> {
                   flex: 1,
                   child: ElevatedButton(
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.purpleAccent,
+                      backgroundColor: widget.themeColor.toColor(),
                       foregroundColor: Colors.white,
                       padding: const EdgeInsets.symmetric(vertical: 12.0),
                       shape: RoundedRectangleBorder(
