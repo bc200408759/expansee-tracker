@@ -9,10 +9,8 @@ extension adjustColorLightness on HSLColor{
         ).clamp(0.0, 1.0
       ).toStringAsFixed(1)
     );
-    print(lightnessNewValue);
 
     final adjustedColor = HSLColor.fromAHSL(this.alpha, this.hue, this.saturation, lightnessNewValue);
-    print(adjustedColor.lightness);
     return adjustedColor;
   }
 }
